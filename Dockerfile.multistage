@@ -8,7 +8,8 @@ RUN --mount=type=cache,target=/go/pkg/mod go mod download
 
 COPY . .
 RUN --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/docker-gs-ping .
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -mod=vendor -o /out/docker-gs-ping .
 
 FROM scratch
 COPY --from=build /out/docker-gs-ping /docker-gs-ping
