@@ -1,24 +1,16 @@
-FROM golang:1.25.5 AS build-stage
+# syntax=docker/dockerfile:1
 
-WORKDIR /app
+FROM --platform=$BUILDPLATFORM golang:1.25.5 AS build
+WORKDIR /src
 
 COPY go.mod go.sum ./
+RUN --mount=type=cache,target=/go/pkg/mod go mod download
 
-RUN go mod download
+COPY . .
+RUN --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /out/docker-gs-ping .
 
-COPY *.go ./
-
-FROM build-stage AS run-test-stage
-RUN go test -v ./...
-
-FROM gcr.io/distroless/base-debian11:nonroot AS build-release-stage
-
-WORKDIR /
-
-COPY --from=build-stage /docker-gs-ping /docker-gs-ping
-
+FROM scratch
+COPY --from=build /out/docker-gs-ping /docker-gs-ping
 EXPOSE 8080
-
-USER nonroot:nonroot
-
 ENTRYPOINT ["/docker-gs-ping"]
