@@ -31,7 +31,7 @@ resource "aws_instance" "demo-instance" {
 # Your security that grants ssh access from 
 # your ip address to your ec2 instance
 resource "aws_security_group" "ssh" {
-  name        = "allow_ssh_from_me"
+  name        = "allow_ssh_from_me-"
   description = "SSH from a single IP"
   ingress {
     description = "SSH"
