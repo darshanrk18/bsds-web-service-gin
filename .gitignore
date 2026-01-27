@@ -53,3 +53,14 @@ Thumbs.db
 
 # Documentation (uncomment if you want to ignore markdown files)
 *.md
+
+# Terraform files (uncomment if you want to ignore terraform files)
+*.tfstate*
+*.tfvars
+*.lock*
+.terraform/
+
+# SSH keys (uncomment if you want to ignore ssh keys)
+id_rsa
+id_rsa.pub
+.ssh/
