@@ -1,16 +1,20 @@
-# syntax=docker/dockerfile:1
+FROM golang:1.25.6-alpine3.23  AS build
+RUN apk add --no-cache git
 
-FROM golang:1.25.6-alpine3.23
-
-WORKDIR /app
-
+WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY *.go ./
+COPY . .
+# disable cgo, target linux, static link
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags="-s -w" -o server .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o /docker-gs-ping
+FROM alpine:latest
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /app
+COPY --from=build /src/server .
 
 EXPOSE 8080
-
-CMD ["/docker-gs-ping"]
+ENTRYPOINT ["./server"]
