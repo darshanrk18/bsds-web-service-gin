@@ -59,6 +59,7 @@ Thumbs.db
 *.tfvars
 *.lock*
 .terraform/
+t2/
 
 # SSH keys (uncomment if you want to ignore ssh keys)
 id_rsa
