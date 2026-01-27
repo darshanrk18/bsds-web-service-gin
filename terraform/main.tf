@@ -18,7 +18,7 @@ provider "aws" {
 # Your ec2 instance
 resource "aws_instance" "demo-instance" {
   ami                    = data.aws_ami.al2023.id
-  instance_type          = "t2.micro"
+  instance_type          = "t3.micro"
   iam_instance_profile   = "LabInstanceProfile"
   vpc_security_group_ids = [aws_security_group.ssh.id]
   key_name               = var.ssh_key_name
