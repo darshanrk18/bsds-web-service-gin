@@ -1,0 +1,10 @@
+services:
+  locust-master:
+    build: .
+    command: -f locustfile_http.py --master --web-host 0.0.0.0 --host http://localhost:8080
+    network_mode: host
+
+  locust-worker:
+    build: .
+    command: -f locustfile_http.py --worker --master-host 127.0.0.1
+    network_mode: host
