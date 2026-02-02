@@ -17,7 +17,7 @@ provider "aws" {
 
 # Your ec2 instance
 resource "aws_instance" "demo-instance" {
-  count                  = 2
+  count                  = 1
   ami                    = data.aws_ami.al2023.id
   instance_type          = "t2.micro"
   iam_instance_profile   = "LabInstanceProfile"
