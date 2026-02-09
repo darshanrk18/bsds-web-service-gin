@@ -1,4 +1,4 @@
-package reducer
+package main
 
 import (
 	"context"
