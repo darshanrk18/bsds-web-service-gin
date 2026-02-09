@@ -8,5 +8,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o mapper .
 FROM alpine:3.20
 WORKDIR /app
 COPY --from=build /app/mapper /app/mapper
+RUN chmod +x /app/mapper
 EXPOSE 8080
 CMD ["/app/mapper"]
