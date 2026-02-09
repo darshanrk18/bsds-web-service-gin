@@ -3,11 +3,12 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o reducer .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags="-s -w" -o reducer .
 
 FROM alpine:3.20
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
-COPY --from=build /app/reducer /app/reducer
-RUN chmod +x /app/reducer
+COPY --from=build /app/reducer .
 EXPOSE 8080
-CMD ["/app/reducer"]
+CMD ["./reducer"]

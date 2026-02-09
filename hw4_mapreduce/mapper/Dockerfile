@@ -3,11 +3,12 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o mapper .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags="-s -w" -o mapper .
 
 FROM alpine:3.20
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
-COPY --from=build /app/mapper /app/mapper
-RUN chmod +x /app/mapper
+COPY --from=build /app/mapper .
 EXPOSE 8080
-CMD ["/app/mapper"]
+CMD ["./mapper"]

@@ -3,11 +3,12 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o splitter .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -ldflags="-s -w" -o splitter .
 
 FROM alpine:3.20
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
-COPY --from=build /app/splitter /app/splitter
-RUN chmod +x /app/splitter
+COPY --from=build /app/splitter .
 EXPOSE 8080
-CMD ["/app/splitter"]
+CMD ["./splitter"]
